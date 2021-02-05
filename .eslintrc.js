@@ -1,12 +1,12 @@
 module.exports = {
     'env': {
         'browser': true,
-        'commonjs': true,
-        'es2020': true
+        'node': true,
+        'commonjs': true
     },
     'extends': 'eslint:recommended',
     'parserOptions': {
-        'ecmaVersion': 12
+        'ecmaVersion': 2018
     },
     'rules': {
         'indent': [
