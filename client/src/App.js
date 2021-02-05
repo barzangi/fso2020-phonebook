@@ -44,7 +44,7 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
     if (persons.find(person => person.name.toLowerCase() === newName.toLowerCase())) {
-      updatePerson(newName, newNumber)
+      updatePerson(newName, newNumber);
     } else {
       const newPerson = { name: newName, number: newNumber };
       personService
@@ -63,7 +63,7 @@ const App = () => {
             type: false
           });
           clearNotification(4000);
-        })
+        });
     }
     setNewName('');
     setNewNumber('');
@@ -101,15 +101,15 @@ const App = () => {
   const destroyPerson = person => {
     if (window.confirm(`Delete ${person.name}?`)) {
       personService
-      .destroy(person.id)
-      .then(response => {
-        setPersons(persons.filter(p => p.id !== person.id));
-        setNotification({
-          message: `Deleted ${person.name}`,
-          type: true
+        .destroy(person.id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== person.id));
+          setNotification({
+            message: `Deleted ${person.name}`,
+            type: true
+          });
+          clearNotification(4000);
         });
-        clearNotification(4000);
-      });
     }
   };
 
