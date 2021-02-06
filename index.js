@@ -8,7 +8,7 @@ const cors = require('cors');
 const Person = require('./models/person');
 
 app.use(express.json());
-app.use(express.static('build'));
+app.use(express.static('client/build'));
 
 morgan.token('data', (req) => JSON.stringify(req.body));
 app.use(morgan(
@@ -16,6 +16,11 @@ app.use(morgan(
 ));
 
 app.use(cors());
+
+// health check
+app.get('/health', (req, res) => {
+  res.send('ok');
+});
 
 // all persons
 app.get('/api/persons', (req, res) => {
