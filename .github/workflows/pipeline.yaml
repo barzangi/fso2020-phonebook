@@ -11,6 +11,11 @@ on:
 jobs:
   deployment_pipeline:
     runs-on: ubuntu-18.04
+    env:
+      SKIP_PREFLIGHT_CHECK: true
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST}}
+      PORT: 3001
     steps:
       - uses: actions/checkout@v2
       - name: set up node
