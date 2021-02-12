@@ -11,7 +11,7 @@
     "dev": "NODE_ENV=development nodemon index.js",
     "ui": "cd client && yarn start",
     "install:full": "yarn install && cd client && yarn install",
-    "build": "cd client && rm -rf build && yarn build",
+    "build": "cd client && yarn install && rm -rf build && yarn build",
     "lint": "eslint . && cd client && yarn lint",
     "test": "NODE_ENV=test jest --verbose --runInBand",
     "cypress:open": "cypress open",
