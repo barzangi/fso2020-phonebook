@@ -1,0 +1,57 @@
+name: Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+jobs:
+  deployment_pipeline:
+    runs-on: ubuntu-18.04
+    env:
+      SKIP_PREFLIGHT_CHECK: true
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST}}
+      PORT: 3001
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: install packages for server and client
+        run: yarn install:full
+      - name: lint
+        run: yarn lint
+      - name: build
+        run: yarn build
+      - name: test
+        run: yarn test
+      - name: e2e test
+        uses: cypress-io/github-action@v2
+        with:
+          command: yarn test:e2e
+          start: yarn start
+          wait-on: http://localhost:3001
+      - name: deploy to heroku
+        uses: akhileshns/heroku-deploy@v3.8.8
+        # only deploy on successful PR merge AND no '#skip' text in commit message
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: 'phonebook-fullstack2020'
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          healthcheck: 'https://phonebook-fullstack2020.herokuapp.com/health'
+          checkstring: 'ok'
+          rollbackonhealthcheckfailed: true
+      - uses: actions/checkout@v2
+      - name: bump version and push tag
+        uses: anothrNick/github-tag-action@1.33.0
+        # only bump version and push tag on successful PR merge AND no '#skip' text in commit message
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
