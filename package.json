@@ -13,7 +13,7 @@
     "install:full": "yarn install && cd client && yarn install",
     "build": "cd client && yarn install && rm -rf build && yarn build",
     "lint": "eslint . && cd client && yarn lint",
-    "test": "jest --verbose --runInBand",
+    "test": "NODE_ENV=test jest --verbose --runInBand",
     "cypress:open": "cypress open",
     "test:e2e": "cypress run"
   },
